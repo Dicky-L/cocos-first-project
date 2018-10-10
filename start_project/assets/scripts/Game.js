@@ -8,6 +8,15 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
+function dataURLtoBlob(dataurl) {
+  var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+  bstr = atob(dataurl), n = bstr.length, u8arr = new Uint8Array(n);
+  while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], {type:mime});
+}
+
 cc.Class({
   extends: cc.Component,
 
@@ -56,7 +65,38 @@ cc.Class({
     this.score = 0
   },
 
-  start() {},
+  start() {
+    // web加载数据方法
+    let arrayBufferHandler = (item, callback) => {
+      let data = window.resMap[item.url]
+      callback(null, dataURLtoBlob(data))
+    }
+
+    // web加载数据方法
+    let jsonBufferHandler = (item, callback) => {
+      let str = window.resMap[item.url]
+      callback(null, str)
+    }
+
+    // web加载数据方法
+    let audioBufferHandler = (item, callback) => {
+      let str = window.resMap[item.url]
+      callback(null, str)
+    }
+
+    // 添加加载函数
+    cc.loader.addDownloadHandlers({
+      png: arrayBufferHandler
+    })
+
+    cc.loader.addDownloadHandlers({
+      json: jsonBufferHandler
+    })
+
+    cc.loader.addDownloadHandlers({
+      mp3: audioBufferHandler
+    })
+  },
 
   update: function(dt) {
     // 每帧更新计时器，超过限度还没有生成新的星星
@@ -104,6 +144,6 @@ cc.Class({
 
   gameOver: function() {
     this.player.stopAllActions() //停止 player 节点的跳跃动作
-    cc.director.loadScene('first')
+    cc.director.loadScene('Game')
   }
 })

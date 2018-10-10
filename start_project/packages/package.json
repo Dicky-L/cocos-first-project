@@ -1,0 +1,12 @@
+{
+  "name": "biu biu biu",
+  "version": "0.0.1",
+  "description": "测试扩展包",
+  "author": "Cocos Creator",
+  "main": "main.js",
+  "main-menu": {
+    "Packages/Hello World": {
+      "message": "hello-world:say-hello"
+    }
+  }
+}
